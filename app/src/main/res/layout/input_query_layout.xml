@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/strongCyan"
+    android:paddingLeft="@dimen/general_padding_search_bar"
+    android:paddingRight="@dimen/general_padding_search_bar"
+    android:paddingTop="@dimen/general_padding_search_bar"
+    android:paddingBottom="@dimen/bottom_padding_search_bar"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditText
+        android:id="@+id/searchEditor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:cursorVisible="true"
+        android:drawableStart="@drawable/ic_24px_search_grey"
+        android:drawableLeft="@drawable/ic_24px_search_grey"
+        android:drawablePadding="@dimen/search_icon_padding"
+        android:hint="@string/search_github_user"
+        android:imeOptions="actionSearch"
+        android:maxLines="1"
+        android:padding="@dimen/search_icon_padding"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/general_font_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="text" />
+</androidx.constraintlayout.widget.ConstraintLayout>
