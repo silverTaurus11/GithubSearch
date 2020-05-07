@@ -1,5 +1,6 @@
-package com.example.githubsearch.model
+package com.example.githubsearch.model.repositories
 
+import com.example.githubsearch.model.users.Owner
 import com.google.gson.annotations.SerializedName
 
 data class Repository(

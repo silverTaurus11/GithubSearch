@@ -2,9 +2,8 @@ package com.example.githubsearch.presenter
 
 import com.example.githubsearch.helper.ErrorConst
 import com.example.githubsearch.helper.network.NoInternetConnectionException
-import com.example.githubsearch.model.Owner
-import com.example.githubsearch.model.Repository
-import com.example.githubsearch.model.SearchResponse
+import com.example.githubsearch.model.users.Owner
+import com.example.githubsearch.model.users.SearchUsersResponse
 import com.example.githubsearch.repository.GithubRepository
 import com.example.githubsearch.repository.GithubRepositoryImpl
 import com.example.githubsearch.view.GithubUsersView
@@ -46,12 +45,12 @@ class GithubUsersPresenterTest {
 
     @Test
     fun requestUsersData_returnSuccessRequest(){
-        val searchResponse = dummySearchResponse()
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        val searchResponse = dummySearchUsersResponse()
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.just(searchResponse))
         githubUsersPresenter.requestUsersData(eq(keyword), any(), any())
 
-        val captor: KArgumentCaptor<List<Repository>> = argumentCaptor()
+        val captor: KArgumentCaptor<List<Owner>> = argumentCaptor()
         verify(githubUsersView).showUsersData(captor.capture(), eq(false))
 
         Assert.assertEquals(searchResponse.items, captor.lastValue)
@@ -59,8 +58,13 @@ class GithubUsersPresenterTest {
 
     @Test
     fun requestUsersData_returnEmptyUsers(){
-        val searchResponse = SearchResponse(0, false, mutableListOf())
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        val searchResponse =
+            SearchUsersResponse(
+                0,
+                false,
+                mutableListOf()
+            )
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.just(searchResponse))
         githubUsersPresenter.requestUsersData(eq(keyword), any(), any())
         verify(githubUsersView).emptyUserLayout(eq(false))
@@ -68,7 +72,7 @@ class GithubUsersPresenterTest {
 
     @Test
     fun requestUserData_returnNoInternetConnection(){
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.error(NoInternetConnectionException()))
 
         githubUsersPresenter.requestUsersData(eq(keyword), any(), any())
@@ -83,7 +87,7 @@ class GithubUsersPresenterTest {
     fun requestUserData_returnReachRequestLimit(){
         val reachRequestLimit = HttpException(Response.error<Any>(403,
             "ReachRequestLimit".toResponseBody("".toMediaTypeOrNull())))
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.error(reachRequestLimit))
 
         githubUsersPresenter.requestUsersData(eq(keyword), any(), any())
@@ -93,7 +97,7 @@ class GithubUsersPresenterTest {
 
     @Test
     fun requestUserData_returnServerUnavailable(){
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.error(Exception()))
 
         githubUsersPresenter.requestUsersData(eq(keyword), any(), any())
@@ -106,12 +110,12 @@ class GithubUsersPresenterTest {
 
     @Test
     fun loadMoreData_returnSuccessRequest(){
-        val searchResponse = dummySearchResponse()
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        val searchResponse = dummySearchUsersResponse()
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.just(searchResponse))
         githubUsersPresenter.loadMoreData(eq(keyword), any(), any())
 
-        val captor: KArgumentCaptor<List<Repository>> = argumentCaptor()
+        val captor: KArgumentCaptor<List<Owner>> = argumentCaptor()
         verify(githubUsersView).showUsersData(captor.capture(), eq(true))
 
         Assert.assertEquals(searchResponse.items, captor.lastValue)
@@ -119,8 +123,13 @@ class GithubUsersPresenterTest {
 
     @Test
     fun loadMoreData_returnEmptyUsers(){
-        val searchResponse = SearchResponse(0, false, mutableListOf())
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        val searchResponse =
+            SearchUsersResponse(
+                0,
+                false,
+                mutableListOf()
+            )
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.just(searchResponse))
         githubUsersPresenter.loadMoreData(eq(keyword), any(), any())
         verify(githubUsersView).emptyUserLayout(eq(true))
@@ -128,7 +137,7 @@ class GithubUsersPresenterTest {
 
     @Test
     fun loadMoreData_returnNoInternetConnection(){
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.error(NoInternetConnectionException()))
 
         githubUsersPresenter.loadMoreData(eq(keyword), any(), any())
@@ -143,7 +152,7 @@ class GithubUsersPresenterTest {
     fun loadMoreData_returnReachRequestLimit(){
         val reachRequestLimit = HttpException(Response.error<Any>(403,
             "ReachRequestLimit".toResponseBody("".toMediaTypeOrNull())))
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.error(reachRequestLimit))
 
         githubUsersPresenter.loadMoreData(eq(keyword), any(), any())
@@ -153,7 +162,7 @@ class GithubUsersPresenterTest {
 
     @Test
     fun loadMoreData_returnServerUnavailable(){
-        `when`(githubRepository.searchRepository(eq(keyword), any(), any()))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.error(Exception()))
 
         githubUsersPresenter.loadMoreData(eq(keyword), any(), any())
@@ -164,13 +173,17 @@ class GithubUsersPresenterTest {
         Assert.assertEquals(ErrorConst.GithubError.SERVER_UNAVAILABLE, captor.lastValue)
     }
 
-    private fun dummySearchResponse(): SearchResponse {
-        val owner = Owner("123", "www.github.com",
+    private fun dummySearchUsersResponse(): SearchUsersResponse {
+        val owner = Owner("test",
+            "123", "www.github.com",
             "https://banner2.cleanpng.com/20180920/yko/kisspng-computer-icons-portable-network" +
-                    "-graphics-avatar-ic-5ba3c66df14d32.3051789815374598219884.jpg")
-        val repository = Repository("123", "test", owner, "www.github.com",
-            "2020-04-10T06:02:01Z" )
-        return SearchResponse(1, false, mutableListOf(repository))
+                    "-graphics-avatar-ic-5ba3c66df14d32.3051789815374598219884.jpg"
+        )
+        return SearchUsersResponse(
+            1,
+            false,
+            mutableListOf(owner)
+        )
     }
 
 }

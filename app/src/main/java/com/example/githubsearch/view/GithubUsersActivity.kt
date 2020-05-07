@@ -15,7 +15,7 @@ import com.example.githubsearch.R
 import com.example.githubsearch.helper.AbstractTextWatcher
 import com.example.githubsearch.helper.ErrorConst
 import com.example.githubsearch.helper.KeyboardController.hideKeyboard
-import com.example.githubsearch.model.Repository
+import com.example.githubsearch.model.users.Owner
 import com.example.githubsearch.presenter.GithubUsersPresenterFactory
 import com.example.githubsearch.view.adapter.GithubUsersRecyclerViewAdapter
 import com.google.gson.Gson
@@ -137,17 +137,19 @@ class GithubUsersActivity: AppCompatActivity(), GithubUsersView {
     private fun defaultLayout(){
         githubUsersRecycleviewAdapter.clearDataUsers()
         hideLoadMoreLoading()
+        infoMessageView.visibility = View.GONE
+        githubUsersRecyclerView.visibility = View.GONE
     }
 
-    override fun showUsersData(itemList: List<Repository>, isLoadMore: Boolean) {
-        infoMessageView.visibility = View.GONE
-        githubUsersRecyclerView.visibility = View.VISIBLE
+    override fun showUsersData(itemList: List<Owner>, isLoadMore: Boolean) {
         if(isLoadMore){
             githubUsersRecycleviewAdapter.updateDataUsers(itemList)
             hideLoadMoreLoading()
         } else{
             githubUsersRecycleviewAdapter.insertNewDataUsers(itemList)
         }
+        infoMessageView.visibility = View.GONE
+        githubUsersRecyclerView.visibility = View.VISIBLE
     }
 
     private fun loadingLayout(){
@@ -254,8 +256,8 @@ class GithubUsersActivity: AppCompatActivity(), GithubUsersView {
         usersRepositorys?.let{
             if(it.isNotEmpty()){
                 if(recyclerViewVisibility == View.VISIBLE){
-                    val usersList: List<Repository>
-                            = gson.fromJson(usersRepositorys, object : TypeToken<List<Repository>>() {}.type)
+                    val usersList: List<Owner>
+                            = gson.fromJson(usersRepositorys, object : TypeToken<List<Owner>>() {}.type)
                     showUsersData(usersList, false)
                     if(position >= usersList.size ){
                         githubUsersRecyclerView.smoothScrollToPosition(position)
