@@ -8,4 +8,5 @@ interface GithubUsersView {
     fun requestLimitLayout(isLoadMore: Boolean)
     fun emptyUserLayout(isLoadMore: Boolean)
     fun showErrorToast(error: ErrorConst.GithubError, isLoadMore: Boolean)
+    fun invalidQueryLayout()
 }

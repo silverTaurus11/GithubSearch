@@ -96,6 +96,18 @@ class GithubUsersPresenterTest {
     }
 
     @Test
+    fun requestUserData_returnInvalidKeyword(){
+        val reachRequestLimit = HttpException(Response.error<Any>(422,
+            "InvalidKeyword".toResponseBody("".toMediaTypeOrNull())))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
+            .thenReturn(Observable.error(reachRequestLimit))
+
+        githubUsersPresenter.requestUsersData(eq(keyword), any(), any())
+
+        verify(githubUsersView).invalidQueryLayout()
+    }
+
+    @Test
     fun requestUserData_returnServerUnavailable(){
         `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
             .thenReturn(Observable.error(Exception()))
@@ -158,6 +170,18 @@ class GithubUsersPresenterTest {
         githubUsersPresenter.loadMoreData(eq(keyword), any(), any())
 
         verify(githubUsersView).requestLimitLayout(eq(true))
+    }
+
+    @Test
+    fun loadMoreData_returnInvalidKeyword(){
+        val reachRequestLimit = HttpException(Response.error<Any>(422,
+            "InvalidKeyword".toResponseBody("".toMediaTypeOrNull())))
+        `when`(githubRepository.searchUsers(eq(keyword), any(), any()))
+            .thenReturn(Observable.error(reachRequestLimit))
+
+        githubUsersPresenter.loadMoreData(eq(keyword), any(), any())
+
+        verify(githubUsersView).invalidQueryLayout()
     }
 
     @Test

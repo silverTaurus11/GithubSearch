@@ -147,6 +147,9 @@ class GithubUsersActivity: AppCompatActivity(), GithubUsersView {
             hideLoadMoreLoading()
         } else{
             githubUsersRecycleviewAdapter.insertNewDataUsers(itemList)
+            if(itemList.isNotEmpty()){
+                githubUsersRecyclerView.smoothScrollToPosition(0)
+            }
         }
         infoMessageView.visibility = View.GONE
         githubUsersRecyclerView.visibility = View.VISIBLE
@@ -188,6 +191,11 @@ class GithubUsersActivity: AppCompatActivity(), GithubUsersView {
         } else{
             defaultLayout()
         }
+    }
+
+    override fun invalidQueryLayout() {
+        isNeedResetLayout = true
+        showInfoMessageLayout(resources.getString(R.string.invalid_keyword))
     }
 
     private fun showLoadMoreLoading(){

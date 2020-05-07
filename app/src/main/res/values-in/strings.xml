@@ -8,4 +8,5 @@
     <string name="error_request_limit">Kamu telah melampaui batas permintaan, silakan coba lagi nanti.</string>
     <string name="wait_a_moment">Sedang mencari data, harap tunggu sebentar…</string>
     <string name="has_reached_bottom_list">Kamu telah mencapai batas akhir</string>
+    <string name="invalid_keyword">Kata kunci yang Anda masukkan tidak valid</string>
 </resources>

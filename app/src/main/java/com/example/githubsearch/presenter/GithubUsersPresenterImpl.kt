@@ -1,6 +1,7 @@
 package com.example.githubsearch.presenter
 
 import com.example.githubsearch.helper.ErrorConst
+import com.example.githubsearch.helper.ErrorConst.GITHUB_INVALID_QUERY_CODE
 import com.example.githubsearch.helper.ErrorConst.GITHUB_REACH_REQUEST_LIMIT_CODE
 import com.example.githubsearch.helper.ObserverAdapter
 import com.example.githubsearch.helper.network.NoInternetConnectionException
@@ -49,10 +50,16 @@ class GithubUsersPresenterImpl(private val githubRepository: GithubRepository,
                         showErrorToast(ErrorConst.GithubError.NO_INTERNET_CONNECTION, isLoadMore)
                     } else{
                         if(e is HttpException){
-                            if(e.code() == GITHUB_REACH_REQUEST_LIMIT_CODE){
-                                githubUsersView.requestLimitLayout(isLoadMore)
-                            } else{
-                                showErrorToast(ErrorConst.GithubError.SERVER_UNAVAILABLE, isLoadMore)
+                            when {
+                                e.code() == GITHUB_REACH_REQUEST_LIMIT_CODE -> {
+                                    githubUsersView.requestLimitLayout(isLoadMore)
+                                }
+                                e.code() == GITHUB_INVALID_QUERY_CODE -> {
+                                    githubUsersView.invalidQueryLayout()
+                                }
+                                else -> {
+                                    showErrorToast(ErrorConst.GithubError.SERVER_UNAVAILABLE, isLoadMore)
+                                }
                             }
                         } else{
                             showErrorToast(ErrorConst.GithubError.SERVER_UNAVAILABLE, isLoadMore)
