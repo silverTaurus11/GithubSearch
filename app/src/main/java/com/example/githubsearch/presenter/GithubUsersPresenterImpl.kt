@@ -1,10 +1,12 @@
 package com.example.githubsearch.presenter
 
 import com.example.githubsearch.helper.ErrorConst
+import com.example.githubsearch.helper.ErrorConst.GITHUB_INVALID_QUERY_CODE
 import com.example.githubsearch.helper.ErrorConst.GITHUB_REACH_REQUEST_LIMIT_CODE
 import com.example.githubsearch.helper.ObserverAdapter
 import com.example.githubsearch.helper.network.NoInternetConnectionException
-import com.example.githubsearch.model.SearchResponse
+import com.example.githubsearch.model.repositories.SearchResponse
+import com.example.githubsearch.model.users.SearchUsersResponse
 import com.example.githubsearch.repository.GithubRepository
 import com.example.githubsearch.view.GithubUsersView
 import io.reactivex.rxjava3.core.Scheduler
@@ -27,14 +29,14 @@ class GithubUsersPresenterImpl(private val githubRepository: GithubRepository,
 
     private fun searchUsers(keyword: String, page: Int, perPage: Int, isLoadMore: Boolean){
         githubRepository
-            .searchRepository(keyword, page, perPage)
+            .searchUsers(keyword, page, perPage)
             .observeOn(scheduler)
-            .subscribe(object: ObserverAdapter<SearchResponse>() {
+            .subscribe(object: ObserverAdapter<SearchUsersResponse>() {
                 override fun onSubscribe(disposable: Disposable?) {
                     searchRepositoryDisposable = disposable
                 }
 
-                override fun onNext(it: SearchResponse) {
+                override fun onNext(it: SearchUsersResponse) {
                     val itemsSize = it.items.size
                     if(itemsSize > 0){
                         githubUsersView.showUsersData(it.items, isLoadMore)
@@ -48,10 +50,16 @@ class GithubUsersPresenterImpl(private val githubRepository: GithubRepository,
                         showErrorToast(ErrorConst.GithubError.NO_INTERNET_CONNECTION, isLoadMore)
                     } else{
                         if(e is HttpException){
-                            if(e.code() == GITHUB_REACH_REQUEST_LIMIT_CODE){
-                                githubUsersView.requestLimitLayout(isLoadMore)
-                            } else{
-                                showErrorToast(ErrorConst.GithubError.SERVER_UNAVAILABLE, isLoadMore)
+                            when {
+                                e.code() == GITHUB_REACH_REQUEST_LIMIT_CODE -> {
+                                    githubUsersView.requestLimitLayout(isLoadMore)
+                                }
+                                e.code() == GITHUB_INVALID_QUERY_CODE -> {
+                                    githubUsersView.invalidQueryLayout()
+                                }
+                                else -> {
+                                    showErrorToast(ErrorConst.GithubError.SERVER_UNAVAILABLE, isLoadMore)
+                                }
                             }
                         } else{
                             showErrorToast(ErrorConst.GithubError.SERVER_UNAVAILABLE, isLoadMore)

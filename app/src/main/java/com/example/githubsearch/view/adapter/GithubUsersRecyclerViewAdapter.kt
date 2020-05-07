@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubsearch.R
-import com.example.githubsearch.model.Repository
+import com.example.githubsearch.model.users.Owner
 
 class GithubUsersRecyclerViewAdapter: RecyclerView.Adapter<GithubUsersRecyclerViewHolder>() {
-    private var githubUsers: MutableList<Repository> = mutableListOf()
+    private var githubUsers: MutableList<Owner> = mutableListOf()
     private var isShowProgressBar = false
 
-    fun insertNewDataUsers(newGithubUsers: List<Repository>){
+    fun insertNewDataUsers(newGithubUsers: List<Owner>){
         val result = DiffUtil.calculateDiff(MyCallBack(githubUsers,
             newGithubUsers.toMutableList()))
         this.githubUsers.clear()
@@ -23,7 +23,7 @@ class GithubUsersRecyclerViewAdapter: RecyclerView.Adapter<GithubUsersRecyclerVi
         insertNewDataUsers(mutableListOf())
     }
 
-    fun updateDataUsers(githubUsers: List<Repository>){
+    fun updateDataUsers(githubUsers: List<Owner>){
         this.githubUsers.addAll(githubUsers)
         notifyDataSetChanged()
     }
@@ -42,7 +42,7 @@ class GithubUsersRecyclerViewAdapter: RecyclerView.Adapter<GithubUsersRecyclerVi
         }
     }
 
-    fun getItemList(): List<Repository>{
+    fun getItemList(): List<Owner>{
         return githubUsers
     }
 

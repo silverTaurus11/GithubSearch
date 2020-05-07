@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.githubsearch.R
-import com.example.githubsearch.model.Repository
+import com.example.githubsearch.model.users.Owner
 
 
 class GithubUsersRecyclerViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -22,8 +22,8 @@ class GithubUsersRecyclerViewHolder(view: View): RecyclerView.ViewHolder(view) {
     private val progressBar by lazy { view.findViewById<ProgressBar>(R.id.loadMoreProgressBar) }
     private val imageRequestManager by lazy { Glide.with(view) }
 
-    fun bind(item: Repository, isLastItem: Boolean, isShowFooterProgressBar: Boolean){
-        imageRequestManager.load(item.owner.avatarUrl)
+    fun bind(item: Owner, isLastItem: Boolean, isShowFooterProgressBar: Boolean){
+        imageRequestManager.load(item.avatarUrl)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(userImage)
@@ -32,7 +32,7 @@ class GithubUsersRecyclerViewHolder(view: View): RecyclerView.ViewHolder(view) {
         parentViewLayout.setOnClickListener { it?.let{
             val intent = Intent(Intent.ACTION_VIEW)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.data = Uri.parse(item.owner.htmlUrl)
+            intent.data = Uri.parse(item.htmlUrl)
             it.context.startActivity(intent)
         } }
 

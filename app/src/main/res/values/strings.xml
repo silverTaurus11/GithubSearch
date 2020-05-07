@@ -8,4 +8,5 @@
     <string name="error_request_limit">You\'ve exceeded the request limit, please try again later.</string>
     <string name="wait_a_moment">Looking for data, please wait a moment …</string>
     <string name="has_reached_bottom_list">You\'ve reached bottom list</string>
+    <string name="invalid_keyword">The keyword you entered is invalid</string>
 </resources>
