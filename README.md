@@ -1,21 +1,22 @@
 # GithubSearch - Android
 
-A simple Android application to search GitHub users with smooth infinite scroll experience.
+A simple and responsive Android application to search GitHub users.  
+Powered by the [GitHub REST API v3](https://docs.github.com/en/rest).
 
-Powered by [GitHub API](https://docs.github.com/en/rest).
 
 ## ✨ Features
 
-- 🔍 Search GitHub users by username
-- 🔁 Endless scrolling for user results
-- 🔄 Supports both portrait and landscape orientations
-- ⚡ Fast, lightweight, and responsive UI
+- 🔍 **Search GitHub Users** by username.
+- 📜 **Endless Scrolling** for user lists (pagination).
+- 📱 **Responsive UI** — Supports both **Portrait** and **Landscape** orientations.
+- 🧠 **MVP Architecture** (Model-View-Presenter) for maintainable and testable code.
 
-## 🧰 Tech Stack
 
-- **Kotlin** – Modern programming language for Android
-- **Jetpack Components** – ViewModel, LiveData, Lifecycle
-- **Retrofit** – For networking
-- **Glide** – For image loading
-- **RecyclerView** – For efficient scrolling
-- **Material Design** – UI components and guidelines
+## 🛠 Tech Stack
+
+- **Language:** Kotlin  
+- **Architecture:** MVP (Model-View-Presenter)  
+- **Networking:** Retrofit  
+- **Image Loading:** Glide or Coil (tergantung implementasi)  
+- **Pagination:** Manual or Paging Library  
+- **View:** RecyclerView, Material Design Components
